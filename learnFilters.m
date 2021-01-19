@@ -1,3 +1,5 @@
+clc;
+clear all;
 path = '.\BSR_bsds500\BSR\BSDS500\data\images\train\';
 rng(0)
 f = dir(path);
@@ -29,3 +31,6 @@ end
 cov_matrix = cov(all_patches);
 [V,D] = eig(cov_matrix);
 save('filters.mat', 'V');
+%%
+alphas = learnAlphas(V,f_imgs);
+disp('end')
