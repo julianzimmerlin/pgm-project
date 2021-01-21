@@ -33,4 +33,5 @@ cov_matrix = cov(all_patches);
 save('filters.mat', 'V');
 %%
 alphas = learnAlphas(V,f_imgs);
+save('alphas.mat', 'alphas');
 disp('end')

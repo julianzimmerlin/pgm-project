@@ -8,7 +8,6 @@ Y = randi([0,255],patch_size,patch_size,3,50000);
 % initialize grad alphas to zero
 grad_alphas = zeros(size(filters,2),1);
 
-clique_size = 3;
 % iterate over all alphas
 for k = 1:length(grad_alphas)
     % get gradient of sum of log(experts)

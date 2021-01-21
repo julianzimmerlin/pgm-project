@@ -2,8 +2,8 @@ function alphas = learnAlphas(filters,f_imgs)
 clc;
 rng(0);
 num_samples = 500;
-%ignore the first filter
-filters = filters(:,2:end);
+% calculate alphas for all filters 
+% filters = filters(:,1:end-1);
 % initialize alphas to zero
 alphas = zeros(size(filters,2),1);
 patchsize = 7;
@@ -19,6 +19,6 @@ for i=1:numel(f_imgs) % loop through training images and extract num_samples pat
     end
     all_patches(:,:,:,(i-1)*num_samples+1:i*num_samples) = patches;
 end
-learning_rate = 0.001;
+learning_rate = 1; % 0.001; we can still adjust this afterwards by rescaling alphas
 % Perform one step of gradient ascent to learn alphas
 alphas = alphas + learning_rate * getGradient(filters,all_patches);
