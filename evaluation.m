@@ -15,25 +15,31 @@ mirrorfilters = reshape(mirrorfilters, cliquesize, cliquesize, 3, []);
 I = double(imread('images/castle.jpg'));
 
 % Add Gaussian noise
-sigma = 15;
-N = I + sigma * randn(size(I));
+sigma_r = 128;
+sigma_g = 15;
+sigma_b = 5;
+factors = zeros(size(I));
+factors(:,:,1) = sigma_r * ones(size(I,1,2));
+factors(:,:,2) = sigma_g * ones(size(I,1,2));
+factors(:,:,3) = sigma_b * ones(size(I,1,2));
+N = I + factors .* randn(size(I));
+N(N>255) = 255;
+N(N<0) = 0;
 
 % We rescale the alphas here instead of adjusting the learning rate
 % so that we dont't have to retrain them every time
-% 5e-10 seems best
+% 4e-10 seems best for sigma=25, 5e-10 for sigma=15
 
-%factors = [1e-12, 1e-11, 1e-10, 1e-9, 1e-8];
-%factors = [2.5e-10, 5e-10, 1e-9, 2e-9, 4e-9];
-factors = [4e-10, 5e-10, 6e-10];
-
-results = zeros(size(factors, 2));
-for i = 1:size(factors,2)
-    alphas_scaled = alphas * factors(i);
+%lambdas = [4e8,5e8,6e8];
+%lambdas = [5e6, 5e7, 5e8];
+lambdas = [4e8];
+results = zeros(size(lambdas, 2));
+for i = 1:size(lambdas,2)
     % Perform 100 iterations of denoising using McAuley's inference implementation
-    O = denoise_foe(N, filters, mirrorfilters, alphas_scaled, sigma, 100, 62.5, I);
+    O = denoise_foe(N, filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], lambdas(i), 250, 4e-8, I);
     imshow(uint8(O));
-    results(i) = psnr(O,I,255);
+    results(i) = psnr(O,I);
 end
-for i = 1:size(factors,2)
-    disp(['Final PSNR for factor ' num2str(factors(i)) ': ' num2str(results(i))])
+for i = 1:size(lambdas,2)
+    disp(['Final PSNR for lambdas ' num2str(lambdas(i)) ': ' num2str(results(i))])
 end

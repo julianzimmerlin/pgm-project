@@ -1,4 +1,4 @@
-function O = denoise_foe(N, filters, mirrorfilters, alphas, sigma, niters, delta_t, I)
+function O = denoise_foe(N, filters, mirrorfilters, alphas, sigma, lambda, niters, delta_t, I)
 %DENOISE_FOE   Image denoising with FoE model.
 %   O = DENOISE_FOE(N, P, SIGMA, NITERS, DELTAT) performs image denoising
 %   of image N using an FoE model P.  The algorithm assumes additive
@@ -42,24 +42,42 @@ function O = denoise_foe(N, filters, mirrorfilters, alphas, sigma, niters, delta
   % Find appropriate lambda value for given sigma.  The sigma-lambda
   % pairs here are determined experimentally to give good denoising
   % performance with the 5x5 model.
-  sigmas  = [5 10 15 25];
-  lambdas = [0.4 0.5 0.5 0.5];
-  lambda  = interp1(sigmas, lambdas, sigma, 'spline');
+  %sigmas  = [5 10 15 25];
+  %lambdas = [0.4 0.5 0.5 0.5];
+  %lambda  = interp1(sigmas, lambdas, sigma, 'spline');
 
   % Perform given number of denoising iterations.
-  O = N;  
+  O = N;
   g = zeros(size(O));
+  if size(sigma,2) == 3
+      factors = zeros(size(O));
+      factors(:,:,1) = sigma(1) * ones(size(O,1,2));
+      factors(:,:,2) = sigma(2) * ones(size(O,1,2));
+      factors(:,:,3) = sigma(3) * ones(size(O,1,2));
+  end
+  bestimg = O;
+  bestpsnr = -100;
   for i = 1:niters
     
     % Print out status every iteration
     % PSNR output, if original image is given.
     if (nargin > 7)
-      tmp = O;
-      fprintf('%d/%d iterations (PSNR=%2.2fdB)\n', i, niters, psnr(tmp, I,255));
+      psn = psnr(O, I);
+      fprintf('%d/%d iterations (PSNR=%2.2fdB)\n', i, niters, psn);
+      if psn > bestpsnr
+        bestpsnr = psn;
+        bestimg = O;
+      end
     else
       fprintf('%d/%d iterations\n', i, niters);
     end
     
     g = evaluate_foe_log_grad(filters, mirrorfilters, alphas, O);
-    O = O + delta_t * (g + (lambda / sigma^2) * (N - O));
+    if size(sigma,2)==3
+        O = O + delta_t * (g + (lambda ./ factors.^2) .* (N - O));
+    else
+        O = O + delta_t * (g + (lambda / sigma^2) * (N - O));
+    end
   end
+  O = bestimg;
+end
