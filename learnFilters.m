@@ -35,3 +35,9 @@ save('filters.mat', 'V');
 alphas = learnAlphas(V,f_imgs);
 save('alphas.mat', 'alphas');
 disp('end')
+%% Learning alphas when using cnn filters
+% load cnn filter
+V_cnn =  double(load('cnn3Filters.mat').mydata);
+alphas_cnn = learnAlphas(V_cnn,f_imgs);
+save('alphas_cnn3.mat', 'alphas_cnn');
+disp('end')
