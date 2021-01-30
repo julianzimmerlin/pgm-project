@@ -1,6 +1,6 @@
 % visualize filters
 cliquesize=3;
-load('filters.mat');
+load('filters_ycbcr.mat');
 load('alphas.mat');
 filters = V;
 for i=1:size(filters,2)

@@ -19,11 +19,11 @@ end
 
 % load filters and alphas
 cliquesize=3;
-load('filters.mat');
-load('alphas.mat');
+load('filters_ycbcr.mat');
+load('alphas_ycbcr.mat');
 % Remove last filter (gray image)
-alphas = alphas(1:end-1);
-filters = V(:,1:end-1);
+alphas = alphas(1:end-3);
+filters = V(:,1:end-3);
 %Reshape our filters to match their format
 mirrorfilters = filters(size(filters,1):-1:1, :);
 filters = reshape(filters, cliquesize, cliquesize, 3, []); 
@@ -35,7 +35,10 @@ for i=1:numel(f_imgs)
     disp(['Round ' num2str(i) ' --------------------------------'])
     disp( ['Current file is: ' f_imgs(i).name] );
     I = double(imread([path f_imgs(i).name]));
-    
+    %figure, imshow(uint8(I))
+    %figure, imshow(uint8(rgb2ycbcr(I)))
+    %figure, imshow(uint8(ycbcr2rgb(rgb2ycbcr(uint8(I))))
+
     % Add Gaussian noise equally to all channels
     sigma = 25;
     N_1 = I + sigma * randn(size(I));
@@ -71,17 +74,24 @@ for i=1:numel(f_imgs)
     results(1,2,i) = psnr(Out_2,I);
     disp(['Equal noise: ' num2str(results(1,1,i)) ', unequal noise: ' num2str(results(1,2,i))])
     
+    N_1= rgb2ycbcr(uint8(N_1));
+    N_2= rgb2ycbcr(uint8(N_2));
     % denoise using learned filters
     disp('Learned filters')
     % Perform 100 iterations of denoising using McAuley's inference implementation
-    O_1 = denoise_foe(N_1, filters, mirrorfilters, alphas, sigma, 1e9, 150, 1e-8, I); % alphas .* 4e-10 % delta_t formerly 6.5
-    O_2 = denoise_foe(N_2, filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 5e8, 200, 4e-8, I); % alphas .* 1e-9
+    O_1 = denoise_foe(double(N_1), filters, mirrorfilters, alphas, sigma, 4e9, 175, .25e-8, I); % alphas .* 4e-10 % delta_t formerly 6.5
+    O_2 = denoise_foe(double(N_2), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e6, 175, 1e-8, I); % alphas .* 1e-9
+    O_1 = ycbcr2rgb(uint8(O_1));
+    O_2 = ycbcr2rgb(uint8(O_2));
     results(2,1,i) = psnr(O_1,I);
     results(2,2,i) = psnr(O_2,I);
     disp(['Equal noise: ' num2str(results(2,1,i)) ', unequal noise: ' num2str(results(2,2,i))])
-    
+    N_2= ycbcr2rgb(N_2);
+    N_1= ycbcr2rgb(N_1);
+    figure, imshow(uint8(N_1));
+    figure, imshow(uint8(O_1));
     figure, imshow(uint8(N_2));
     figure, imshow(uint8(O_2));
 end
 
-save('results.mat', 'results')
+save('results_ycbcr.mat', 'results')
