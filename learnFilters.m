@@ -35,9 +35,13 @@ save('filters.mat', 'V');
 alphas = learnAlphas(V,f_imgs);
 save('alphas.mat', 'alphas');
 disp('end')
-%% Learning alphas when using cnn filters
-% load cnn filter
-V_cnn =  double(load('cnn3Filters.mat').mydata);
-alphas_cnn = learnAlphas(V_cnn,f_imgs);
-save('alphas_cnn3.mat', 'alphas_cnn');
+%% Learning alphas when using gan filters
+% load gan filter
+V_gan =  double(load('ganFilters.mat').ganFilters);
+combinedFilters3 = [V V_gan];
+save('combinedFilters3.mat', 'combinedFilters3');
+alphas_combined3 = learnAlphas(combinedFilters3,f_imgs);
+%alphas_gan = learnAlphas(V_gan,f_imgs);
+save('alphas_combined3.mat', 'alphas_combined3');
+%save('alphas_gan.mat', 'alphas_gan');
 disp('end')

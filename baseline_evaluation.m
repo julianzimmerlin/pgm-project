@@ -19,17 +19,17 @@ end
 
 % load filters and alphas
 cliquesize=3;
-load('filters.mat');
-load('alphas.mat');
+load('combinedFilters3.mat')
+load('alphas_combined3.mat');
 % Remove last filter (gray image)
-alphas = alphas(1:end-1);
-filters = V(:,1:end-1);
+alphas = alphas_combined3(1:end-1);
+filters = combinedFilters3(:,1:end-1);
 %Reshape our filters to match their format
 mirrorfilters = filters(size(filters,1):-1:1, :);
 filters = reshape(filters, cliquesize, cliquesize, 3, []); 
 mirrorfilters = reshape(mirrorfilters, cliquesize, cliquesize, 3, []);
 
-results = zeros(2,2,numel(f_imgs)); % num_methods * num_noise_models * num_images
+ganResults3 = zeros(2,2,numel(f_imgs)); % num_methods * num_noise_models * num_images
 % Iterate over test images
 for i=1:numel(f_imgs)
     disp(['Round ' num2str(i) ' --------------------------------'])
@@ -67,21 +67,21 @@ for i=1:numel(f_imgs)
     %figure, plot(1:size(log_post,2),log_post(1,:));
     %figure, plot(1:size(log_post,2),log_post(2,:));
     %figure, plot(1:size(log_post,2),log_post(3,:));
-    results(1,1,i) = psnr(Out_1,I);
-    results(1,2,i) = psnr(Out_2,I);
-    disp(['Equal noise: ' num2str(results(1,1,i)) ', unequal noise: ' num2str(results(1,2,i))])
+    ganResults3(1,1,i) = psnr(Out_1,I);
+    ganResults3(1,2,i) = psnr(Out_2,I);
+    disp(['Equal noise: ' num2str(ganResults3(1,1,i)) ', unequal noise: ' num2str(ganResults3(1,2,i))])
     
     % denoise using learned filters
     disp('Learned filters')
     % Perform 100 iterations of denoising using McAuley's inference implementation
     O_1 = denoise_foe(N_1, filters, mirrorfilters, alphas, sigma, 1e9, 150, 1e-8, I); % alphas .* 4e-10 % delta_t formerly 6.5
     O_2 = denoise_foe(N_2, filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 5e8, 200, 4e-8, I); % alphas .* 1e-9
-    results(2,1,i) = psnr(O_1,I);
-    results(2,2,i) = psnr(O_2,I);
-    disp(['Equal noise: ' num2str(results(2,1,i)) ', unequal noise: ' num2str(results(2,2,i))])
+    ganResults3(2,1,i) = psnr(O_1,I);
+    ganResults3(2,2,i) = psnr(O_2,I);
+    disp(['Equal noise: ' num2str(ganResults3(2,1,i)) ', unequal noise: ' num2str(ganResults3(2,2,i))])
     
     figure, imshow(uint8(N_2));
     figure, imshow(uint8(O_2));
 end
 
-save('results.mat', 'results')
+save('ganResults3.mat', 'ganResults3')
