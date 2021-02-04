@@ -17,13 +17,13 @@ for i=1:numel(f) % ignore files that aren't jpg images
         j = j+1;
     end
 end
-%for i=1:numel(f2) % ignore files that aren't jpg images
-%    [~,~, fExt] = fileparts(f2(i).name);
-%    if strcmpi(fExt,'.jpg')
-%        f_imgs(j).name = f2(i).name;
-%        j = j+1;
-%    end
-%end
+for i=1:numel(f2) % ignore files that aren't jpg images
+    [~,~, fExt] = fileparts(f2(i).name);
+    if strcmpi(fExt,'.jpg')
+        f_imgs(j).name = f2(i).name;
+        j = j+1;
+    end
+end
 for i=1:numel(f_imgs) % loop through training images and extract num_samples patches from each of them
     disp( ['Current file is: ' f_imgs(i).name] );
     if i <= 200
@@ -31,7 +31,7 @@ for i=1:numel(f_imgs) % loop through training images and extract num_samples pat
     else
         img = imread([path2 f_imgs(i).name]);
     end
-    img = rgb2ycbcr(img);
+    %img = rgb2ycbcr(img);
     patches = zeros(num_samples,3*patchsize^2);
     for p=1:num_samples
         x = randi(size(img,1)-patchsize);
@@ -43,27 +43,27 @@ end
 
 cov_matrix = cov(all_patches);
 [V,D] = eig(cov_matrix);
-save('filters_ycbcr.mat', 'V');
+save('filters_400_500.mat', 'V');
 %%
 alphas = learnAlphas(V,f_imgs);
-save('alphas_ycbcr.mat', 'alphas');
+save('alphas_400_500.mat', 'alphas');
 disp('end')
-<<<<<<< HEAD
+%<<<<<<< HEAD
 %% Learning alphas when using gan filters
-% load gan filter
-V_gan =  double(load('ganFilters.mat').ganFilters);
-combinedFilters3 = [V V_gan];
-save('combinedFilters3.mat', 'combinedFilters3');
-alphas_combined3 = learnAlphas(combinedFilters3,f_imgs);
-%alphas_gan = learnAlphas(V_gan,f_imgs);
-save('alphas_combined3.mat', 'alphas_combined3');
-%save('alphas_gan.mat', 'alphas_gan');
-disp('end')
-=======
-%% Learning alphas when using cnn filters
-% load cnn filter
-%V_cnn =  double(load('cnn3Filters.mat').mydata);
-%alphas_cnn = learnAlphas(V_cnn,f_imgs);
-%save('alphas_cnn3.mat', 'alphas_cnn');
+%% load gan filter
+%V_gan =  double(load('ganFilters.mat').ganFilters);
+%combinedFilters3 = [V V_gan];
+%save('combinedFilters3.mat', 'combinedFilters3');
+%alphas_combined3 = learnAlphas(combinedFilters3,f_imgs);
+%%alphas_gan = learnAlphas(V_gan,f_imgs);
+%save('alphas_combined3.mat', 'alphas_combined3');
+%%save('alphas_gan.mat', 'alphas_gan');
 %disp('end')
->>>>>>> f9146fe5c7a082592a138d2582d946747c19fd66
+%=======
+%%% Learning alphas when using cnn filters
+%% load cnn filter
+%%V_cnn =  double(load('cnn3Filters.mat').mydata);
+%%alphas_cnn = learnAlphas(V_cnn,f_imgs);
+%%save('alphas_cnn3.mat', 'alphas_cnn');
+%%disp('end')
+%>>>>>>> f9146fe5c7a082592a138d2582d946747c19fd66

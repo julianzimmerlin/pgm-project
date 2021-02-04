@@ -1,7 +1,7 @@
 function alphas = learnAlphas(filters,f_imgs)
 clc;
 rng(0);
-num_samples = 1000;
+num_samples = 500;
 % calculate alphas for all filters
 % filters = filters(:,1:end-1);
 % initialize alphas to zero
