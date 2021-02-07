@@ -62,7 +62,7 @@ function O = denoise_foe(N, filters, mirrorfilters, alphas, sigma, lambda, niter
     % Print out status every iteration
     % PSNR output, if original image is given.
     if (nargin > 7)
-      O_rgb = ycbcr2rgb(uint8(O));
+      O_rgb =O;%ycbcr2rgb(uint8(O));
       psn = psnr(O_rgb, I);
       fprintf('%d/%d iterations (PSNR=%2.2fdB)\n', i, niters, psn);
       if psn > bestpsnr
