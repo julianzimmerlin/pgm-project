@@ -1,6 +1,5 @@
-PGM Project
 ![alt text](https://github.com/julianzimmerlin/pgm-project/blob/master/sample.png?raw=true)
-
+PGM Project
 This is the code for the practical project of the Probabilistic Graphical Models class 2021 at Saarland University.
 In this project, we address the problem of color image denoising.
 
@@ -23,4 +22,4 @@ To train the DCGAN, go the *DCGAN* folder and run
 `python train.py`
 To generate the filters using DCGAN, go to the *DCGAN* folder and run
 `python generateFilters.py `
- ![alt text](https://github.com/julianzimmerlin/pgm-project/blob/master/sample.png?raw=true)
+
