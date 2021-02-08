@@ -4,7 +4,8 @@ This is the code for the practical project of the Probabilistic Graphical Models
 In this project, we address the problem of color image denoising.
 
 To reproduce the results given in tables one and two, open the file baseline_evaluation.m. In the file, load the filters and alphas that you want to use (e.g. filters_200_500.mat and alphas_200_500.mat).
-Then execute the script. For denoising in the YCbCr color space, you additionally need to uncomment the lines that convert the noisy images to YCbCr and back and open the file file denoise_foe.m and uncomment the marked line there.
+Then execute the script. For denoising in the YCbCr color space, you additionally need to uncomment the lines that convert the noisy images to YCbCr and back and open the file denoise_foe.m and uncomment the marked line there. Keep in mind that you still need to pass the original RGB image to denoise_foe for correct PSNR calculation.
+Also, in all cases, make sure the hyperparameters are as described in the report.
 
 The reproduce the table from the YCbCr discussion section, execute the file ycbcr_vs_rgb.m and also uncomment the marked line in denoise_foe.m
 

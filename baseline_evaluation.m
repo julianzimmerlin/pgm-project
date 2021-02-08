@@ -74,8 +74,8 @@ for i=1:numel(f_imgs)
     % denoise using learned filters
     disp('Learned filters')
     % Perform 100 iterations of denoising using McAuley's inference implementation
-    O_1 = denoise_foe(double(N_1), filters, mirrorfilters, alphas, sigma, 1e9, 150, 2e-9, I_rgb); % alphas .* 4e-10 % delta_t formerly 6.5
-    O_2 = denoise_foe(double(N_2), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e7, 200, 1e-8, I_rgb); % alphas .* 1e-9
+    O_1 = denoise_foe(double(N_1), filters, mirrorfilters, alphas, sigma, 1e9, 150, 1e-8, I); % alphas .* 4e-10 % delta_t formerly 6.5
+    O_2 = denoise_foe(double(N_2), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 5e8, 200, 4e-8, I); % alphas .* 1e-9
     results(2,1,i) = psnr(O_1,I);
     results(2,2,i) = psnr(O_2,I);
     disp(['Equal noise: ' num2str(results(2,1,i)) ', unequal noise: ' num2str(results(2,2,i))])
