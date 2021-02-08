@@ -1,4 +1,5 @@
 PGM Project
+![alt text](https://github.com/julianzimmerlin/pgm-project/blob/master/sample.png?raw=true)
 
 This is the code for the practical project of the Probabilistic Graphical Models class 2021 at Saarland University.
 In this project, we address the problem of color image denoising.
@@ -18,3 +19,8 @@ The inference_baseline folder contains inference code for the baseline, which is
 The DCGAN folder contains the PyTorch implementation of the GAN that we used to augment the pool of filters.
 
 You also need to download the BSDS500 dataset and add it to the directory if you want to evaluate the code on the test images.
+To train the DCGAN, go the *DCGAN* folder and run
+`python train.py`
+To generate the filters using DCGAN, go to the *DCGAN* folder and run
+`python generateFilters.py `
+ ![alt text](https://github.com/julianzimmerlin/pgm-project/blob/master/sample.png?raw=true)
