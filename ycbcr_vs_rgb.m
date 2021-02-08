@@ -33,6 +33,7 @@ mirrorfilters = reshape(mirrorfilters, cliquesize, cliquesize, 3, []);
 
 results = zeros(2,numel(f_imgs));
 for i=1:numel(f_imgs)
+    %i=4;
     disp(['Round ' num2str(i) ' --------------------------------'])
     disp( ['Current file is: ' f_imgs(i).name] );
     I = double(rgb2ycbcr(imread([path f_imgs(i).name])));
@@ -50,7 +51,7 @@ for i=1:numel(f_imgs)
     N_2(N_2>240) = 240;
     N_2(N_2<16) = 16;
     N_2_rgb = ycbcr2rgb(uint8(N_2));
-    figure, imshow(uint8(N_2_rgb));
+    %figure, imshow(uint8(N_2_rgb));
 
     
     disp('Noisy Images')
@@ -64,12 +65,13 @@ for i=1:numel(f_imgs)
     disp(num2str(psnr(Out_2_rgb,I_rgb)))
     
     % ycbcr and rgb denoising
-    O_2 = denoise_foe(double(N_2), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e7, 150, 1e-8, I_rgb); % alphas .* 1e-9
-    Out_2_rgb = denoise_foe(double(N_2_rgb), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e7, 200, 1e-8, I_rgb);
+    O_2 = denoise_foe(double(N_2), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e7, 150, .5e-8, I_rgb); % alphas .* 1e-9
+    %Out_2_rgb = denoise_foe(double(N_2_rgb), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e7, 200, 1e-8, I_rgb);
     O_2_rgb = ycbcr2rgb(uint8(O_2));
     results(1,i) = psnr(O_2_rgb,I_rgb);
-    results(2,i) = psnr(Out_2_rgb,I_rgb);
-    disp(['ycbcr: ' num2str(results(1,i)) ', rgb: ' num2str(results(2,i))])
+    %results(2,i) = psnr(Out_2_rgb,I_rgb);
+    disp(['ycbcr: ' num2str(results(1,i))])
+    %disp(['ycbcr: ' num2str(results(1,i)) ', rgb: ' num2str(results(2,i))])
 end
 
 save('results_ycbcr_vs_rgb.mat', 'results')
