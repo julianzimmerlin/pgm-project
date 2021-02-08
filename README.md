@@ -1,4 +1,5 @@
 ![alt text](https://github.com/julianzimmerlin/pgm-project/blob/master/sample.png?raw=true)
+<br/>
 PGM Project
 This is the code for the practical project of the Probabilistic Graphical Models class 2021 at Saarland University.
 In this project, we address the problem of color image denoising.
