@@ -21,8 +21,8 @@ end
 cliquesize=3;
 %load('combinedFilters3.mat')
 %load('alphas_combined3.mat');
-load('filters_ycbcr.mat');
-load('alphas_ycbcr.mat');
+load('filters_200_500.mat');
+load('alphas_200_500.mat');
 % Remove last filter (gray image)
 alphas = alphas(1:end-1);
 filters = V(:,1:end-1);
@@ -69,23 +69,23 @@ for i=1:numel(f_imgs)
     results(1,2,i) = psnr(Out_2,I);
     disp(['Equal noise: ' num2str(results(1,1,i)) ', unequal noise: ' num2str(results(1,2,i))])
     
-    N_1= rgb2ycbcr(uint8(N_1));
-    N_2= rgb2ycbcr(uint8(N_2));
+    %N_1= rgb2ycbcr(uint8(N_1));
+    %N_2= rgb2ycbcr(uint8(N_2));
     % denoise using learned filters
     disp('Learned filters')
     % Perform 100 iterations of denoising using McAuley's inference implementation
-    O_1 = denoise_foe(double(N_1), filters, mirrorfilters, alphas, sigma, 1e9, 150, 2e-9, I); % alphas .* 4e-10 % delta_t formerly 6.5
-    O_2 = denoise_foe(double(N_2), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e7, 200, 1e-8, I); % alphas .* 1e-9
-    %results(2,1,i) = psnr(O_1,I);
+    O_1 = denoise_foe(double(N_1), filters, mirrorfilters, alphas, sigma, 1e9, 150, 2e-9, I_rgb); % alphas .* 4e-10 % delta_t formerly 6.5
+    O_2 = denoise_foe(double(N_2), filters, mirrorfilters, alphas, [sigma_r sigma_g sigma_b], 1e7, 200, 1e-8, I_rgb); % alphas .* 1e-9
+    results(2,1,i) = psnr(O_1,I);
+    results(2,2,i) = psnr(O_2,I);
+    disp(['Equal noise: ' num2str(results(2,1,i)) ', unequal noise: ' num2str(results(2,2,i))])
+    
+    %O_1 = ycbcr2rgb(uint8(O_1));
+    %O_2 = ycbcr2rgb(uint8(O_2));
+    %results(2,1,i) = psnr(O_1,I); 
     %results(2,2,i) = psnr(O_2,I);
     %disp(['Equal noise: ' num2str(results(2,1,i)) ', unequal noise: ' num2str(results(2,2,i))])
     
-    O_1 = ycbcr2rgb(uint8(O_1));
-    O_2 = ycbcr2rgb(uint8(O_2));
-    results(2,1,i) = psnr(O_1,I); 
-    results(2,2,i) = psnr(O_2,I);
-    disp(['Equal noise: ' num2str(results(2,1,i)) ', unequal noise: ' num2str(results(2,2,i))])
-    %disp(['unequal noise: ' num2str(results(2,2,i))])
 %     N_2= ycbcr2rgb(N_2);
 %     N_1= ycbcr2rgb(N_1);
     %figure, imshow(uint8(N_1));
@@ -95,5 +95,5 @@ for i=1:numel(f_imgs)
 end
 
 %save('results_400_500.mat', 'results')
-save('results_ycbcr.mat', 'results')
+%save('results_ycbcr.mat', 'results')
 
