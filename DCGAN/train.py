@@ -14,10 +14,11 @@ import torchvision.transforms as transforms
 import torchvision.utils as vutils
 import numpy as np
 from tqdm import tqdm
+#from models import *
 from models import *
 manualSeed = 999
 #manualSeed = random.randint(1, 10000) # use if you want new results
-print("Random Seed: ", manualSeed)
+#print("Random Seed: ", manualSeed)
 random.seed(manualSeed)
 torch.manual_seed(manualSeed)
 
@@ -27,9 +28,6 @@ workers = 2
 # Batch size during training
 batch_size = 27
 
-# Spatial size of training images. All images will be resized to this
-#   size using a transformer.
-image_size = 64
 
 # Number of channels in the training images. For color images this is 3
 nc = 3
@@ -85,7 +83,7 @@ if (device.type == 'cuda') and (ngpu > 1):
 netG.apply(weights_init)
 
 # Print the model
-print(netG)
+#print(netG)
 
 
 
@@ -100,7 +98,7 @@ if (device.type == 'cuda') and (ngpu > 1):
 netD.apply(weights_init)
 
 # Print the model
-print(netD)
+#print(netD)
 
 
 
@@ -125,9 +123,9 @@ G_losses = []
 D_losses = []
 iters = 0
 
-print("Starting Training Loop...")
+#print("Starting Training Loop...")
 # For each epoch
-for epoch in tqdm(range(200)):
+for epoch in tqdm(range(num_epochs)):
     # For each batch in the dataloader
     for i, data in enumerate(dataloader, 0):
         
@@ -139,7 +137,7 @@ for epoch in tqdm(range(200)):
         # Format batch
         #print(data.shape)
         real_cpu = data.to(device)
-        print('real cpu shape {}'.format(real_cpu.shape))
+        #print('real cpu shape {}'.format(real_cpu.shape))
         b_size = real_cpu.size(0)
         label = torch.full((b_size,), real_label, dtype=torch.float, device=device)
         # Forward pass real batch through D
@@ -155,7 +153,7 @@ for epoch in tqdm(range(200)):
         noise = torch.randn(b_size, nz, 1, 1, device=device)
         # Generate fake image batch with G
         fake = netG(noise)
-        print('fake shape is {}'.format(fake.shape))
+        #print('fake shape is {}'.format(fake.shape))
         label.fill_(fake_label)
         # Classify all fake batch with D
         output = netD(fake.detach()).view(-1)
@@ -185,7 +183,7 @@ for epoch in tqdm(range(200)):
         # Update G
         optimizerG.step()
         ###################
-        for x in range(100):
+        for x in range(50):
             netG.zero_grad()
             noise = torch.randn(b_size, nz, 1, 1, device=device)
             # Generate fake image batch with G
@@ -212,5 +210,5 @@ for epoch in tqdm(range(200)):
         
             
         iters += 1
-torch.save(netD.state_dict(), './Discriminator_weights.pth')
+#torch.save(netD.state_dict(), './Discriminator4_weights.pth')
 torch.save(netG.state_dict(), './Generator_weights.pth')

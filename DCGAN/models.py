@@ -11,22 +11,22 @@ class Generator(nn.Module):
             nn.ConvTranspose2d( nz, ngf * 8, 3, 1, 1, bias=False),
             nn.BatchNorm2d(ngf * 8),
             nn.ReLU(True),
-            # state size. (ngf*8) x 3 x 3
+            # state size. (ngf*8) x 1 x 1
             nn.ConvTranspose2d(ngf * 8, ngf * 4, 3, 1, 1, bias=False),
             nn.BatchNorm2d(ngf * 4),
             nn.ReLU(True),
-            # state size. (ngf*4) x 3 x 3
+            # state size. (ngf*4) x 1 x 1
             nn.ConvTranspose2d( ngf * 4, ngf * 2, 3, 1, 1, bias=False),
             nn.BatchNorm2d(ngf * 2),
             nn.ReLU(True),
-            # state size. (ngf*2) x 3 x 3
+            # state size. (ngf*2) x 1 x 1
             nn.ConvTranspose2d( ngf * 2, ngf, 3, 1, 1, bias=False),
             nn.BatchNorm2d(ngf),
             nn.ReLU(True),
-            # state size. (ngf) x 3 x 3
+            # state size. (ngf) x 1 x 1
             nn.ConvTranspose2d( ngf, nc, 3, 1, 0, bias=False),
             nn.Tanh()
-            # state size. (nc) x 3 x 3
+            # state size. (nc) x 1 x 1
         )
 
     def forward(self, input):
@@ -55,6 +55,7 @@ class Discriminator(nn.Module):
             # state size. (ndf*8) x 3 x 3
             nn.Conv2d(ndf * 8, 1, 3, 1, 0, bias=False),
             nn.Sigmoid()
+            # state size is 1 x 1 x 1
         )
 
     def forward(self, input):
